@@ -1,0 +1,27 @@
+#!/bin/bash
+trash=$HOME/.trashbox
+
+sel() {
+	
+	echo "Select recover directory"
+	
+	select opt in $@
+	do
+		echo "Please check dirctory contents"
+		echo "------------------------------"
+		ls $opt -R
+		echo "------------------------------"
+
+		echo "This will be copy to"
+		cat $opt/.recover-dir.log
+
+		echo "comfirm (y/n)"
+		read cfm
+		if [ $cfm = "y" ]; then
+			mv $opt `cat $opt/.recover-dir.log`
+		fi
+		break
+	done
+}
+
+sel $trash/*
