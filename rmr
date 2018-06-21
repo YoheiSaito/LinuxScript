@@ -1,18 +1,13 @@
 #!/bin/bash
 trash=$HOME/.trashbox
 
-function rdmkdir(){
-	if [ -d $1 ]; then
-		rdmkdir $1/../
-	else
-		mkdir $1
-	fi
-}
-
 function reremove(){
-	
-	echo -e '\n\e[33mSelect recover directory number\n\e[34m'
-	
+	if [ `ls -l $trash | wc -l` != "1" ]; then
+		echo -e '\n\e[33mSelect recover directory number\n\e[34m'
+	else
+		echo  "There is no file in TrashBox"
+		return 0
+	fi 
 	select opt in $@
 	do
 		echo -e '\e[mPlease check dirctory contents table\n'
@@ -23,10 +18,10 @@ function reremove(){
 		dist=`cat $opt/.recover-dir.log`
 		
 		echo -e 'This will be copy to\e[32m' $dist
-		echo -e '\e[mcomfirm (y/n)'
+		echo -e -n '\e[mcomfirm (y/n)'
 		read cfm
 		if [ $cfm = "n" ]; then
-			echo -e " continue? (y/n)"
+			echo -n " continue? (y/n)"
 			read cfm
 			if [ cfm == "y" ]; then
 				continue
@@ -38,11 +33,9 @@ function reremove(){
 		/bin/rm $opt/.recover-dir.log
 
 		echo -e ''
-		echo -e 'Do you want to \e[32mpop \e[mfile(s) from manegement Dir (y/n)'
+		echo -e -n  'Do you want to \e[32mpop \e[mfile(s) from manegement Dir (y/n)'
 		read cfm
-		if [ ! -d $dist ]; then
-			rdmkdir $dist
-		fi
+		mkdir -p  $dist
 		if [ $cfm = "y" ]; then
 			mv -vf $opt/* $dist
 			/bin/rm -rfd $opt/
