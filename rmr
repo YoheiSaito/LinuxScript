@@ -1,6 +1,14 @@
 #!/bin/bash
 trash=$HOME/.trashbox
 
+function rdmkdir(){
+	if [ -d $1 ]; then
+		rdmkdir $1/../
+	else
+		mkdir $1
+	fi
+}
+
 function reremove(){
 	
 	echo -e '\n\e[33mSelect recover directory number\n\e[34m'
@@ -18,7 +26,13 @@ function reremove(){
 		echo -e '\e[mcomfirm (y/n)'
 		read cfm
 		if [ $cfm = "n" ]; then
-			break
+			echo -e " continue? (y/n)"
+			read cfm
+			if [ cfm == "y" ]; then
+				continue
+			else
+				break
+			fi
 		fi
 		
 		/bin/rm $opt/.recover-dir.log
@@ -26,6 +40,9 @@ function reremove(){
 		echo -e ''
 		echo -e 'Do you want to \e[32mpop \e[mfile(s) from manegement Dir (y/n)'
 		read cfm
+		if [ ! -d $dist ]; then
+			rdmkdir $dist
+		fi
 		if [ $cfm = "y" ]; then
 			mv -vf $opt/* $dist
 			/bin/rm -rfd $opt/
