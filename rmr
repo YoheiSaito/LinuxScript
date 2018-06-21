@@ -1,27 +1,39 @@
 #!/bin/bash
 trash=$HOME/.trashbox
 
-sel() {
+function reremove(){
 	
-	echo "Select recover directory"
+	echo -e '\n\e[33mSelect recover directory number\n\e[34m'
 	
 	select opt in $@
 	do
-		echo "Please check dirctory contents"
-		echo "------------------------------"
+		echo -e '\e[mPlease check dirctory contents table\n'
+		echo -e '---------------------------------\e[35m'
 		ls $opt -R
-		echo "------------------------------"
+		echo -e '\e[m---------------------------------'
 
-		echo "This will be copy to"
-		cat $opt/.recover-dir.log
+		dist=`cat $opt/.recover-dir.log`
+		
+		echo -e 'This will be copy to\e[32m' $dist
+		echo -e '\e[mcomfirm (y/n)'
+		read cfm
+		if [ $cfm = "n" ]; then
+			break
+		fi
+		
+		/bin/rm $opt/.recover-dir.log
 
-		echo "comfirm (y/n)"
+		echo -e ''
+		echo -e 'Do you want to \e[32mpop \e[mfile(s) from manegement Dir (y/n)'
 		read cfm
 		if [ $cfm = "y" ]; then
-			mv $opt `cat $opt/.recover-dir.log`
+			mv -vf $opt/* $dist
+			/bin/rm -rfd $opt/
+		else
+			mv -vf $opt $dist
 		fi
+
 		break
 	done
 }
-
-sel $trash/*
+reremove $trash/*
