@@ -1,14 +1,47 @@
+
 #!/bin/bash
-fname=/tmp/`date +"%Y%m%d-%H%M%S"`
-echo ""
-echo $fname
-echo `pwd`
-mkdir $fname
-mv $@ $fname || rmdir $fname
+rmdirectory(){
+	tmpf=/tmp/`date +"%Y%m%d-%H%M%S"`
 
-echo `pwd` > $fname/.recover-dir.log
-if [ ! -e $HOME/.trashbox ]; then
-	mkdir $HOME/.trashbox
-fi
-mv $fname $HOME/.trashbox/ 
+	echo -e  "\n" $tmpf "\n"
+	cd $1
+	
+	echo "pushed"
+	mkdir $tmpf
+	mv `pwd` $tmpf || rmdir $tmpf
 
+	echo `pwd` > $tmpf/.recover-dir.log
+	if [ ! -e $HOME/.trashbox ]; then
+		mkdir $HOME/.trashbox
+	fi
+	mv $tmpf $HOME/.trashbox/ 
+}
+
+rmfile(){
+	fname=/tmp/`date +"%Y%m%d-%H%M%S"`
+	echo ""
+	echo $fname
+	echo `pwd`
+	mkdir $fname
+	mv $@ $fname || rmdir $fname
+
+	echo `pwd` > $fname/.recover-dir.log
+	if [ ! -e $HOME/.trashbox ]; then
+		mkdir $HOME/.trashbox
+	fi
+	mv $fname $HOME/.trashbox/ 
+}
+
+main (){
+while [ "$1" != "" ]
+	do
+		if [ -f $1 ]; then
+			rmfile $1
+		elif [ -d $1 ] ; then
+			rmdirectory $1
+		fi
+		shift
+	done
+}
+
+main $@
