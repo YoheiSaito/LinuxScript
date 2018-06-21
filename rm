@@ -1,7 +1,0 @@
-#!/bin/bash
-fname=`date +"%Y%m%d-%H%M%S"`
-echo $fname
-mkdir $fname
-mv $@ ./$fname
-echo `pwd` > ./$fname/.recover-dir.log
-mv ./$fname $HOME/.trashbox/

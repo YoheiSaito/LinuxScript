@@ -1,0 +1,14 @@
+#!/bin/bash
+fname=/tmp/`date +"%Y%m%d-%H%M%S"`
+echo ""
+echo $fname
+echo `pwd`
+mkdir $fname
+mv $@ $fname || rmdir $fname
+
+echo `pwd` > $fname/.recover-dir.log
+if [ ! -e $HOME/.trashbox ]; then
+	mkdir $HOME/.trashbox
+fi
+mv $fname $HOME/.trashbox/ 
+
