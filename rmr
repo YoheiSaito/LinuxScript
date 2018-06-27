@@ -17,7 +17,7 @@ function reremove(){
 
 		dist=`cat $opt/.recover-dir.log`
 		
-		echo -e 'This will be copy to\e[32m' $dist
+		echo -e 'This will copy to\e[32m' $dist
 		echo -e -n '\e[mcomfirm (y/n)'
 		read cfm
 		if [ $cfm = "n" ]; then
