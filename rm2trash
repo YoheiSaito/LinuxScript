@@ -8,7 +8,6 @@ rmdirectory(){
 	
 	mkdir $tmpf
 	mv `pwd` $tmpf || rmdir $tmpf
-	echo $@
 	cd ../
 	echo `pwd` > $tmpf/.recover-dir.log
 	if [ ! -e $HOME/.trashbox ]; then
@@ -21,10 +20,8 @@ rmfile(){
 	filename=`echo $@ | awk -F "/" '{ print $NF }'`
 	fname=/tmp/${filename}_`date +"%Y-%m.%d-%H:%M.%S"`
 	echo $fname
-	echo `pwd`
 	mkdir $fname
 	mv $@ $fname || rmdir $fname
-	echo $@
 	echo `pwd` > $fname/.recover-dir.log
 	if [ ! -e $HOME/.trashbox ]; then
 		mkdir $HOME/.trashbox

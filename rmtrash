@@ -1,3 +1,4 @@
 #!/bin/bash
 
 /bin/rm -rd $HOME/.trashbox/*
+echo "Now trash box is Cleaned up!!"
