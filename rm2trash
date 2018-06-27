@@ -1,15 +1,13 @@
-
 #!/bin/bash
 rmdirectory(){
 	tmpf=/tmp/`date +"%Y%m%d-%H%M%S"`
 
-	echo -e  "\n" $tmpf "\n"
+	echo -e   $tmpf 
 	cd $1
 	
-	echo "pushed"
 	mkdir $tmpf
 	mv `pwd` $tmpf || rmdir $tmpf
-
+	cd ../
 	echo `pwd` > $tmpf/.recover-dir.log
 	if [ ! -e $HOME/.trashbox ]; then
 		mkdir $HOME/.trashbox

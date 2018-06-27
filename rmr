@@ -37,10 +37,10 @@ function reremove(){
 		read cfm
 		mkdir -p  $dist
 		if [ $cfm = "y" ]; then
-			mv -vf $opt/* $dist
+			mv -vf $opt/* $dist/
 			/bin/rm -rfd $opt/
 		else
-			mv -vf $opt $dist
+			mv -vf $opt $dist/
 		fi
 
 		break
