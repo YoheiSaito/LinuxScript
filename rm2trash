@@ -1,7 +1,7 @@
 #!/bin/bash
 rmdirectory(){
 	filename=`echo $@ | awk -F "/" '{ print $NF }'`
-	tmpf=/tmp/${filename}_`date +"%Y%m%d-%H%M%S"`
+	tmpf=/tmp/${filename}_`date +"%Y-%m.%d-%H:%M.%S"`d
 
 	echo -e   $tmpf 
 	cd $1
@@ -19,7 +19,7 @@ rmdirectory(){
 
 rmfile(){
 	filename=`echo $@ | awk -F "/" '{ print $NF }'`
-	fname=/tmp/${filename}_`date +"%Y%m%d-%H%M%S"`
+	fname=/tmp/${filename}_`date +"%Y-%m.%d-%H:%M.%S"`
 	echo $fname
 	echo `pwd`
 	mkdir $fname
