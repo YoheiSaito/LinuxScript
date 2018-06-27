@@ -2,7 +2,7 @@
 trash=$HOME/.trashbox
 
 function reremove(){
-	if [ `ls -l $trash | wc -l` != "1" ]; then
+	if [ `ls -l ./ | wc -l` != "1" ]; then
 		echo -e '\n\e[33mSelect recover directory number\n\e[34m'
 	else
 		echo  "There is no file in TrashBox"
@@ -46,4 +46,6 @@ function reremove(){
 		break
 	done
 }
-reremove $trash/*
+pushd $trash
+reremove *
+popd
