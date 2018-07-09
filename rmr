@@ -10,17 +10,20 @@ function reremove(){
 	fi 
 	select opt in $@
 	do
+		if [ -z $opt ]; then
+			echo -e "\e[31mplease input the number displayed"
+			break;
+		fi
 		echo -e '\e[mPlease check dirctory contents table\n'
 		echo -e '---------------------------------\e[35m'
 		ls $opt -R
 		echo -e '\e[m---------------------------------'
-
-		dist=`cat $opt/.recover-dir.log`
 		
-		echo -e 'This will copy to\e[32m' $dist
+		dist=`cat $opt/.recover-dir.log`
+		echo -e 'This will be copy to\e[32m' $dist
 		echo -e -n '\e[mcomfirm (y/n)'
 		read cfm
-		if [ $cfm = "n" ]; then
+		if [ $cfm != "y" ]; then
 			echo -n " continue? (y/n)"
 			read cfm
 			if [ cfm == "y" ]; then
