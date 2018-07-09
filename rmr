@@ -8,7 +8,14 @@ function reremove(){
 		echo  "There is no file in TrashBox"
 		return 0
 	fi 
-	select opt in $@
+	cand=""
+	while [ "$1" != "" ]; do
+		if [ -e $1/.recover-dir.log ]; then
+			cand=$cand\ $1
+		fi
+		shift
+	done
+	select opt in $cand
 	do
 		if [ -z $opt ]; then
 			echo -e "\e[31mplease input the number displayed"
@@ -50,5 +57,5 @@ function reremove(){
 	done
 }
 pushd $trash >/dev/null
-reremove *
+reremove * .* 
 popd  > /dev/null
