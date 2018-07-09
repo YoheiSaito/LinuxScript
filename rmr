@@ -1,13 +1,48 @@
 #!/bin/bash
 trash=$HOME/.trashbox
-
-function reremove(){
-	if [ `ls -l ./ | wc -l` != "1" ]; then
-		echo -e '\n\e[33mSelect recover directory number\n\e[34m'
-	else
+checkTrashbox(){
+	if [ `ls -la $trash/ | wc -l` == "3" ]; then
 		echo  "There is no file in TrashBox"
+		return 1
+	else
 		return 0
 	fi 
+}
+restore(){
+	echo -e '\e[mPlease check dirctory contents table\n'
+	echo -e '---------------------------------\e[35m'
+	ls $1 -R
+	echo -e '\e[m---------------------------------'
+
+	dist=`cat $1/.recover-dir.log`
+	echo -e 'This will be copy to\e[32m' $dist
+	echo -e -n '\e[mcomfirm (y/n)'
+	read cfm
+	if [ $cfm != "y" ]; then
+		echo -n " continue? (y/n)"
+		read cfm
+		if [ cfm == "y" ]; then
+			return 1
+		else
+			return 2
+		fi
+	fi
+
+	/bin/rm $1/.recover-dir.log
+
+	echo -e ''
+	echo -e -n  'Do you want to \e[32mpop \e[mfile(s) from manegement Dir (y/n)'
+	read cfm
+	mkdir -p  $dist
+	if [ $cfm = "y" ]; then
+		mv -f $1/* $dist/
+		/bin/rm -rfd $1/
+	else
+		mv -f $1 $dist/
+	fi
+	return 0
+}
+reremove(){
 	cand=""
 	while [ "$1" != "" ]; do
 		if [ -e $1/.recover-dir.log ]; then
@@ -15,47 +50,62 @@ function reremove(){
 		fi
 		shift
 	done
+	if [ "$cand" == "" ]; then 
+		exit 0 
+	fi
+	echo "" 
+	echo -e '\n\e[33mSelect recover directory number\n\e[34m'
 	select opt in $cand
 	do
 		if [ -z $opt ]; then
 			echo -e "\e[31mplease input the number displayed"
-			break;
+			break
 		fi
-		echo -e '\e[mPlease check dirctory contents table\n'
-		echo -e '---------------------------------\e[35m'
-		ls $opt -R
-		echo -e '\e[m---------------------------------'
-		
-		dist=`cat $opt/.recover-dir.log`
-		echo -e 'This will be copy to\e[32m' $dist
-		echo -e -n '\e[mcomfirm (y/n)'
-		read cfm
-		if [ $cfm != "y" ]; then
-			echo -n " continue? (y/n)"
-			read cfm
-			if [ cfm == "y" ]; then
-				continue
-			else
-				break
-			fi
+		restore $opt
+		res=$?
+		if [ "$res" != "2" ]; then
+			break
 		fi
-		
-		/bin/rm $opt/.recover-dir.log
-
-		echo -e ''
-		echo -e -n  'Do you want to \e[32mpop \e[mfile(s) from manegement Dir (y/n)'
-		read cfm
-		mkdir -p  $dist
-		if [ $cfm = "y" ]; then
-			mv -f $opt/* $dist/
-			/bin/rm -rfd $opt/
-		else
-			mv -f $opt $dist/
-		fi
-
-		break
 	done
 }
-pushd $trash >/dev/null
-reremove * .* 
-popd  > /dev/null
+removebefore(){
+	stime=$1
+	etime=$2
+	while [ "$1" != "" ]; do
+		if [ -e $1/.removedate.log ]; then
+			tim=`cat $1/.removedate.log`
+			echo ===== $1 =======
+			echo $tim
+			if [ $tim -gt $stime -a $tim -lt $etime ];
+			then
+				restore $1
+				if [ "$?" == "1" ];then
+					exit
+				fi
+			fi
+		fi
+		shift
+	done
+}
+
+main(){
+	pushd $trash >/dev/null
+	checkTrashbox
+	if [ $? == 1 ]; then 
+		exit 0
+	fi
+	if [ "$1" == "-s" ];then
+		if [ "$#" == 3 ]; then
+			removebefore $2 $3 * .* 
+		else
+			echo 'error $0'
+			echo 'usage: $0 -t start end'
+			echo 'start: enter start unix time you want to undo'
+			echo '  end: enter end   unix time you want to undo'
+		fi
+	else
+		reremove * .*
+	fi
+	popd  > /dev/null
+}
+main $@

@@ -10,6 +10,7 @@ rmdirectory(){
 	mv `pwd` $tmpf || rmdir $tmpf
 	cd ../
 	echo `pwd` > $tmpf/.recover-dir.log
+	echo `date +%s` > $fname/.removedate.log
 	if [ ! -e $HOME/.trashbox ]; then
 		mkdir $HOME/.trashbox
 	fi
@@ -23,6 +24,7 @@ rmfile(){
 	mkdir $fname
 	mv $@ $fname || rmdir $fname
 	echo `pwd` > $fname/.recover-dir.log
+	echo `date +%s` > $fname/.removedate.log
 	if [ ! -e $HOME/.trashbox ]; then
 		mkdir $HOME/.trashbox
 	fi
