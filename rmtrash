@@ -1,4 +1,18 @@
 #!/bin/bash
-
-/bin/rm -rd $HOME/.trashbox/*
-echo "Now trash box is Cleaned up!!"
+remove(){
+	while [ -e $1/.recover-dir.log ]; do
+		echo ====file contents====
+		echo
+		ls -R $1
+		echo
+		echo =====================
+		echo 
+		echo "remove this file (y/n)"
+		read cfm
+		if [ "$cfm" == "y" ];then
+			rm -rf $1/*
+		fi
+		shift
+	done
+}
+remove $HOME/.trashbox/* $HOME/.trashbox/.*
