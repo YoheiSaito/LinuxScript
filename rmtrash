@@ -8,9 +8,10 @@ remove(){
 		echo =====================
 		echo 
 		echo "remove this file (y/n)"
+		cfm=""
 		read cfm
 		if [ "$cfm" == "y" ];then
-			rm -rf $1/*
+			rm -rf $1/* $1
 		fi
 		shift
 	done
