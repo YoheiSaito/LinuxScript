@@ -10,7 +10,7 @@ linuxで動作させる実用スクリプトたち
 - trash-clean  
 `.trashbox`を削除する
 
-- trash-recover
+- trash-recover  
 `.trashbox`内を表示し, 指定してもとのディレクトリに戻す.  
 一度目のcomfirmではディレクトリに戻してよいかどうか.  
 二度目のcomfirmでは, 戻したときに削除ディレクトリから出してもよいかどうか.
