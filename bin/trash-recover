@@ -1,5 +1,7 @@
 #!/bin/bash
 trash=$HOME/.trashbox
+
+# Return 1 if there is no directory in TrashBox
 checkTrashbox(){
 	if [ `ls -la $trash/ | wc -l` == "3" ]; then
 		echo  "There is no file in TrashBox"
@@ -8,10 +10,11 @@ checkTrashbox(){
 		return 0
 	fi 
 }
+
 restore(){
 	echo -e '\e[m Contents Table \n'
 	echo -e '---------------------------------\e[35m'
-	ls $1 -R
+	ls $1 -Ra | grep -v -e .recover-dir.log -e .removedate.log -e "^\.\.$" -e "^\.$"
 	echo -e '\e[m---------------------------------'
 
 	dist=`cat $1/.recover-dir.log`
@@ -29,20 +32,29 @@ restore(){
 	fi
 
 	/bin/rm $1/.recover-dir.log
+	/bin/rm $1/.removedate.log
 
 	echo -e ''
-	echo -e -n  'Do you want to \e[32mpop \e[mfile(s) from manegement Directory (y/n)'
+	echo -e -n  'Do you want to \e[32mpop \e[mfile from manegement Directory (y/n)'
 	read cfm
 	mkdir -p  $dist
 	if [ $cfm = "y" ]; then
-		mv -f $1/* $dist/
-		/bin/rm -rfd $1/
+		if [ -e $1/* ]; then 
+			mv -f $1/* $dist/
+		else
+			srcfile=`ls -a $1 | grep -v -e "^\.\.$" -e "^\.$"`
+			mv -f $1/$srcfile $dist/
+		fi
+		/bin/rm -rf $1/
+
 	else
 		mv -f $1 $dist/
 	fi
 	return 0
 }
-reremove(){
+
+file_determ(){
+	
 	cand=""
 	while [ "$1" != "" ]; do
 		if [ -e $1/.recover-dir.log ]; then
@@ -51,10 +63,13 @@ reremove(){
 		shift
 	done
 	if [ "$cand" == "" ]; then 
+		popd  > /dev/null
 		exit 0 
 	fi
+
 	echo "" 
 	echo -e '\n\e[33mSelect recover directory number\n\e[34m'
+
 	select opt in $cand
 	do
 		if [ -z $opt ]; then
@@ -68,7 +83,9 @@ reremove(){
 		fi
 	done
 }
-removebefore(){
+
+# restore by select time 
+time_determ(){
 	stime=$1
 	etime=$2
 	while [ "$1" != "" ]; do
@@ -80,6 +97,7 @@ removebefore(){
 			then
 				restore $1
 				if [ "$?" == "1" ];then
+					popd  > /dev/null
 					exit
 				fi
 			fi
@@ -93,21 +111,27 @@ help(){
 	echo 'start: enter start unix time you want to undo'
 	echo '  end: enter end   unix time you want to undo'
 }
+
 main(){
 	pushd $trash >/dev/null
+	# check if .trashbox exist
 	checkTrashbox
 	if [ $? == 1 ]; then 
+		popd  > /dev/null
 		exit 0
 	fi
-	if [ "$1" == "-s" ];then
+	if [ "$1" == "-t" ];then
 		if [ "$#" == 3 ]; then
-			removebefore $2 $3 * .* 
+			time_determ $2 $3 * .* 
+		elif ["$#" == 2 ]; then
+			time_determ $2 `date +%s` * .* 
 		else
 			help
 		fi
 	else
-		reremove * .*
+		file_determ * .*
 	fi
 	popd  > /dev/null
 }
+
 main $@
