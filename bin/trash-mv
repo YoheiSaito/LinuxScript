@@ -2,19 +2,19 @@
 rmdirectory(){
 	filename=`echo $@ | awk -F "/" '{ print $NF }'`
 	tmpf=/tmp/${filename}_`date +"%Y-%m.%d-%H:%M.%S"`d
-
-	echo -e   $tmpf 
-	cd $1
-	
+	# echo $filename
+	echo -e  $tmpf 
+	pushd $filename/../ > /dev/null
 	mkdir $tmpf
-	mv `pwd` $tmpf || rmdir $tmpf
-	cd ../
-	echo `pwd` > $tmpf/.recover-dir.log
-	echo `date +%s` > $filename/.removedate.log
+	# write log
+	pwd      > $tmpf/.recover-dir.log
+	date +%s > $tmpf/.removedate.log
+	mv $filename $tmpf
 	if [ ! -e $HOME/.trashbox ]; then
-		mkdir $HOME/.trashbox
+	 	mkdir $HOME/.trashbox
 	fi
 	mv $tmpf $HOME/.trashbox/ 
+	popd > /dev/null
 }
 
 rmfile(){
