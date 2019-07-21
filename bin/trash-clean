@@ -1,6 +1,7 @@
 #!/bin/bash
+. trash-path
 remove(){
-	pushd $HOME/.trashbox > /dev/null
+	pushd $trash > /dev/null
 	while [ -e $1/.recover-dir.log ]; do
 		echo $1
 		echo ====file contents====
@@ -20,4 +21,4 @@ remove(){
 	done
 	popd > /dev/null
 }
-remove `ls -a $HOME/.trashbox/ | grep :`
+remove `ls -a $trash/ | grep :`

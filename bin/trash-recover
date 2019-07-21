@@ -1,5 +1,5 @@
 #!/bin/bash
-trash=$HOME/.trashbox
+. trash-path
 
 # Return 1 if there is no directory in TrashBox
 checkTrashbox(){

@@ -1,4 +1,7 @@
 #!/bin/bash
+
+. trash-path
+
 rmdirectory(){
 	filename=`echo $@ | awk -F "/" '{ print $NF }'`
 	tmpf=/tmp/${filename}_`date +"%Y-%m.%d-%H:%M.%S"`d
@@ -10,10 +13,10 @@ rmdirectory(){
 	pwd      > $tmpf/.recover-dir.log
 	date +%s > $tmpf/.removedate.log
 	mv $filename $tmpf
-	if [ ! -e $HOME/.trashbox ]; then
-	 	mkdir $HOME/.trashbox
+	if [ ! -e $trash ]; then
+	 	mkdir $trash
 	fi
-	mv $tmpf $HOME/.trashbox/ 
+	mv $tmpf $trash 
 	popd > /dev/null
 }
 
@@ -25,10 +28,10 @@ rmfile(){
 	mv $@ $fname || rmdir $fname
 	echo `pwd` > $fname/.recover-dir.log
 	echo `date +%s` > $fname/.removedate.log
-	if [ ! -e $HOME/.trashbox ]; then
-		mkdir $HOME/.trashbox
+	if [ ! -e $trash ]; then
+		mkdir $trash
 	fi
-	mv $fname $HOME/.trashbox/ 
+	mv $fname $trash/ 
 }
 
 main (){
