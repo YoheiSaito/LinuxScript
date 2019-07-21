@@ -34,10 +34,10 @@ rmfile(){
 main (){
 while [ "$1" != "" ]
 	do
-		if [ -f $1 ]; then
-			rmfile $1
-		elif [ -d $1 ] ; then
+		if [ -d $1 ] ; then
 			rmdirectory $1
+		else 
+			rmfile $1
 		fi
 		shift
 	done
