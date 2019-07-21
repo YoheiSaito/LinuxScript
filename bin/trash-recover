@@ -9,17 +9,17 @@ checkTrashbox(){
 	fi 
 }
 restore(){
-	echo -e '\e[mPlease check dirctory contents table\n'
+	echo -e '\e[m Contents Table \n'
 	echo -e '---------------------------------\e[35m'
 	ls $1 -R
 	echo -e '\e[m---------------------------------'
 
 	dist=`cat $1/.recover-dir.log`
-	echo -e 'This will be copy to\e[32m' $dist
-	echo -e -n '\e[mcomfirm (y/n)'
+	echo -e 'This will be copied to\e[32m' $dist
+	echo -e -n '\e[m[y/n]'
 	read cfm
 	if [ $cfm != "y" ]; then
-		echo -n " continue? (y/n)"
+		echo -n " continue? [y/n]"
 		read cfm
 		if [ cfm == "y" ]; then
 			return 1
@@ -31,7 +31,7 @@ restore(){
 	/bin/rm $1/.recover-dir.log
 
 	echo -e ''
-	echo -e -n  'Do you want to \e[32mpop \e[mfile(s) from manegement Dir (y/n)'
+	echo -e -n  'Do you want to \e[32mpop \e[mfile(s) from manegement Directory (y/n)'
 	read cfm
 	mkdir -p  $dist
 	if [ $cfm = "y" ]; then
@@ -58,7 +58,7 @@ reremove(){
 	select opt in $cand
 	do
 		if [ -z $opt ]; then
-			echo -e "\e[31mplease input the number displayed"
+			echo -e "\e[31m Input a number"
 			break
 		fi
 		restore $opt
@@ -87,7 +87,12 @@ removebefore(){
 		shift
 	done
 }
-
+help(){
+	echo 'error $0'
+	echo 'usage: $0 -t start end'
+	echo 'start: enter start unix time you want to undo'
+	echo '  end: enter end   unix time you want to undo'
+}
 main(){
 	pushd $trash >/dev/null
 	checkTrashbox
@@ -98,10 +103,7 @@ main(){
 		if [ "$#" == 3 ]; then
 			removebefore $2 $3 * .* 
 		else
-			echo 'error $0'
-			echo 'usage: $0 -t start end'
-			echo 'start: enter start unix time you want to undo'
-			echo '  end: enter end   unix time you want to undo'
+			help
 		fi
 	else
 		reremove * .*
