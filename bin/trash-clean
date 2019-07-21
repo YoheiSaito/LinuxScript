@@ -1,9 +1,12 @@
 #!/bin/bash
 remove(){
+	pushd $HOME/.trashbox > /dev/null
 	while [ -e $1/.recover-dir.log ]; do
+		echo $1
 		echo ====file contents====
 		echo
-		ls -R $1
+		ls -aR $1 | grep -v -e .recover-dir.log -e .removedate \
+			-e "^\.\.$" -e "^\.$" | sed $(echo -e s/$1\\\///g) 
 		echo
 		echo =====================
 		echo 
@@ -15,5 +18,6 @@ remove(){
 		fi
 		shift
 	done
+	popd > /dev/null
 }
-remove $HOME/.trashbox/* $HOME/.trashbox/.*
+remove `ls -a $HOME/.trashbox/ | grep :`
