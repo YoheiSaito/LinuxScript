@@ -4,5 +4,5 @@ mkdir -p ~/.teyo_script/bin
 cp -r ./bin/ ~/.teyo_script/
 
 echo 'export PATH=$HOME"/.teyo_script/bin":$PATH' >> ~/.profile
-PATH=$HOME"/.teyo_script/bin:"$PATH
+export PATH=$HOME"/.teyo_script/bin:"$PATH
 
