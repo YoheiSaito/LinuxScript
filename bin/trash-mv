@@ -37,10 +37,14 @@ rmfile(){
 main (){
 while [ "$1" != "" ]
 	do
-		if [ -d $1 ] ; then
-			rmdirectory $1
+		if [ -e $1 ] ; then
+			if [ -d $1 ] ; then
+				rmdirectory $1
+			else 
+				rmfile $1
+			fi
 		else 
-			rmfile $1
+			echo $1 "not found"
 		fi
 		shift
 	done
