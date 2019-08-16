@@ -1,0 +1,3 @@
+#!/bin/sh
+. siv3dpath 
+ln -s ${sivpath}/resources ./
