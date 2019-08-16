@@ -1,0 +1,2 @@
+#!/bin/sh
+sivpath=${HOME}'/.teyo_script/siv3d'
