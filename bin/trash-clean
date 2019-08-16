@@ -4,12 +4,12 @@ remove(){
 	pushd $trash > /dev/null
 	while [ -e $1/.recover-dir.log ]; do
 		echo $1
-		echo ====file contents====
+		echo ============file contents============
 		echo
-		ls -aR $1 | grep -v -e .recover-dir.log -e .removedate \
+		tree $1 | grep -v -e .recover-dir.log -e .removedate \
 			-e "^\.\.$" -e "^\.$" | sed $(echo -e s/$1\\\///g) 
 		echo
-		echo =====================
+		echo =====================================
 		echo 
 		echo "remove this file (y/n)"
 		cfm=""
@@ -17,6 +17,7 @@ remove(){
 		if [ "$cfm" == "y" ];then
 			rm -rf $1/* $1
 		fi
+		clear
 		shift
 	done
 	popd > /dev/null

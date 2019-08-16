@@ -11,4 +11,9 @@ else
 	cp -r ./bin/ ~/.teyo_script/
 	echo 'export PATH=$HOME"/.teyo_script/bin":$PATH' >> ~/.profile
 	export PATH=$HOME"/.teyo_script/bin:"$PATH
+	tree . >> /dev/null
+	if [ "$?" != "0" ] ; then
+		echo "Install \`tree\`"
+		sudo apt install tree
+	fi
 fi
