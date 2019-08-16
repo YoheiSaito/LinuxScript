@@ -1,0 +1,28 @@
+#!/bin/sh
+
+. siv3dpath 
+
+main="
+# include <Siv3D.hpp>\n
+void Main() {\n
+\tPrint << U\"Hello, Siv3D!\";\n
+\twhile (System::Update()) {\n
+\t}\n
+}\n
+"
+
+
+if [ "$1" = "" ]; then
+	echo "Usage : " $0 "'project_name'"
+	exit
+fi
+if [ -d $1 ]; then
+	echo "project is already exist." 
+	exit
+fi
+
+mkdir -p ./$1/build
+cat $sivpath/CMakeLists.txt |sed -e "s/Siv3D_App/$1/g" > ./$1/CMakeLists.txt
+echo $main > ./$1/main.cpp
+cd ./$1/build && ln $sivpath/resources ./ -s && cmake .. && bear make && mv compile_commands.json ../
+
